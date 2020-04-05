@@ -1,0 +1,20 @@
+{
+  "repo": [
+    {
+      "branch": "master",
+      "clone": [
+        {
+          "label": "default",
+          "sparse": [
+            "cmd",
+            "config"
+          ]
+        }
+      ],
+      "depth": 1,
+      "name": "repofetcher",
+      "path": "repofetcher",
+      "url": "https://github.com/craftslab/repofetcher.git"
+    }
+  ]
+}

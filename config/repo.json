@@ -1,0 +1,19 @@
+{
+  "repo": [
+    {
+      "branch": "master",
+      "clone": [
+        {
+          "label": "default",
+          "sparse": [
+            "default"
+          ]
+        }
+      ],
+      "depth": 1,
+      "name": "default",
+      "path": "default",
+      "url": "127.0.0.1"
+    }
+  ]
+}

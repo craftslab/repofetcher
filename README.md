@@ -16,7 +16,9 @@
 
 ## Feature
 
-- Support to fetch files from git repository.
+- Support to fetch repository in server mode (http).
+
+- Support to fetch repository in standalone mode (stdio).
 
 
 
@@ -29,13 +31,64 @@
 ## Usage
 
 ```bash
+usage: repofetcher [<flags>]
+
+Repository Fetcher
+
+Flags:
+  --help              Show context-sensitive help (also try --help-long and --help-man).
+  --version           Show application version.
+  --addr=":9093"      Server listen address (http)
+  --mode="stdio"      Communication mode (http|stdio)
+  --repo="repo.json"  Repo list in json (stdio)
+  --routine=0         Routine to fulfill requests (http)
+```
+
+
+
+## Setting
+
+*Repo Fetcher* parameters can be set in the directory config or as HTTP request.
+
+An example of configuration in [repo.json](https://github.com/craftslab/repofetcher/blob/master/config/repo.json):
+
+```json
+{
+  "repo": [
+    {
+      "branch": "master",
+      "clone": [
+        {
+          "label": "default",
+          "sparse": [
+            "cmd",
+            "config"
+          ]
+        }
+      ],
+      "depth": 1,
+      "name": "repofetcher",
+      "path": "repofetcher",
+      "url": "https://github.com/craftslab/repofetcher.git"
+    }
+  ]
+}
 ```
 
 
 
 ## Running
 
+- Server mode (http)
+
 ```bash
+repofetcher --mode="http" --addr=":9093" --routine=1
+```
+
+- Standalone mode (stdio)
+
+```bash
+repofetcher --mode="stdio" --repo="repo.json"
 ```
 
 
