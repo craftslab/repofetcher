@@ -61,8 +61,7 @@ An example of configuration in [repo.json](https://github.com/craftslab/repofetc
         {
           "label": "default",
           "sparse": [
-            "cmd",
-            "config"
+            "cmd"
           ]
         }
       ],

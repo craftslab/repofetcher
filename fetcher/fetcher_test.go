@@ -32,7 +32,6 @@ func TestRunFetcher(t *testing.T) {
 						"label": "default",
 						"sparse": []string{
 							"cmd",
-							"config",
 						},
 					},
 				},
