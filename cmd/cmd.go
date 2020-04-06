@@ -124,7 +124,7 @@ func parseRepo(name string) (config.Config, error) {
 
 func parseRoutine(data int) (int, error) {
 	if data <= 0 {
-		data := runtime.NumCPU() / 2
+		data = runtime.NumCPU() / 2
 		if data <= 0 {
 			data = 1
 		}

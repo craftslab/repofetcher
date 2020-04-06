@@ -60,7 +60,7 @@ func (i Imple) Add(data string) error {
 		return errors.Wrap(err, "getwd failed")
 	}
 
-	if err := os.Chdir(i.path); err != nil {
+	if err = os.Chdir(i.path); err != nil {
 		return errors.Wrap(err, "chdir failed")
 	}
 
