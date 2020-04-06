@@ -12,16 +12,20 @@
 
 package fetcher
 
+import (
+	"repofetcher/config"
+)
+
 type Http struct {
-	config map[string]interface{}
+	cfg config.Config
 }
 
-func (h *Http) Init(config map[string]interface{}) error {
-	h.config = config
+func (h *Http) Init(cfg *config.Config) error {
+	h.cfg = *cfg
 	return nil
 }
 
-func (h Http) Run(addr string, _ map[string]interface{}, routine int) error {
+func (h Http) Run(addr string, routine int) error {
 	return h.runHttp(addr, routine)
 }
 

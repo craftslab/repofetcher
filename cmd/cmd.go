@@ -24,6 +24,7 @@ import (
 	"github.com/pkg/errors"
 	"gopkg.in/alecthomas/kingpin.v2"
 
+	"repofetcher/config"
 	"repofetcher/fetcher"
 )
 
@@ -48,7 +49,7 @@ func Run() {
 		log.Fatal("mode invalid: ", err.Error())
 	}
 
-	repo, err := parseRepo(*repo)
+	cfg, err := parseRepo(*repo)
 	if err != nil {
 		log.Fatal("repo invalid: ", err.Error())
 	}
@@ -58,7 +59,7 @@ func Run() {
 		log.Fatal("routine invalid: ", err.Error())
 	}
 
-	if err := runFetcher(addr, mode, repo, routine); err != nil {
+	if err := runFetcher(addr, mode, &cfg, routine); err != nil {
 		log.Fatal("fetcher failed: ", err.Error())
 	}
 
@@ -100,25 +101,25 @@ func parseMode(data string) (string, error) {
 	return data, nil
 }
 
-func parseRepo(name string) (map[string]interface{}, error) {
+func parseRepo(name string) (config.Config, error) {
+	cfg := config.Config{}
+
 	file, err := os.Open(name)
 	if err != nil {
-		return nil, errors.Wrap(err, "open failed")
+		return cfg, errors.Wrap(err, "open failed")
 	}
 
 	buf, _ := ioutil.ReadAll(file)
 
 	if err := file.Close(); err != nil {
-		return nil, errors.Wrap(err, "close failed")
+		return cfg, errors.Wrap(err, "close failed")
 	}
 
-	result := map[string]interface{}{}
-
-	if err := json.Unmarshal(buf, &result); err != nil {
-		return nil, errors.Wrap(err, "unmarshal failed")
+	if err := json.Unmarshal(buf, &cfg); err != nil {
+		return cfg, errors.Wrap(err, "unmarshal failed")
 	}
 
-	return result, nil
+	return cfg, nil
 }
 
 func parseRoutine(data int) (int, error) {
@@ -132,6 +133,6 @@ func parseRoutine(data int) (int, error) {
 	return data, nil
 }
 
-func runFetcher(addr, mode string, repo map[string]interface{}, routine int) error {
-	return fetcher.Run(addr, mode, repo, routine)
+func runFetcher(addr, mode string, cfg *config.Config, routine int) error {
+	return fetcher.Run(addr, mode, cfg, routine)
 }

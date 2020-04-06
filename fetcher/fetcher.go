@@ -14,11 +14,13 @@ package fetcher
 
 import (
 	"github.com/pkg/errors"
+
+	"repofetcher/config"
 )
 
 type Fetcher interface {
-	Init(config map[string]interface{}) error
-	Run(addr string, repo map[string]interface{}, routine int) error
+	Init(cfg *config.Config) error
+	Run(addr string, routine int) error
 }
 
 var (
@@ -32,8 +34,8 @@ var (
 	}
 )
 
-func Run(addr, mode string, repo map[string]interface{}, routine int) error {
-	return runFetcher(fetchers[mode], addr, repo, routine)
+func Run(addr, mode string, cfg *config.Config, routine int) error {
+	return runFetcher(fetchers[mode], addr, cfg, routine)
 }
 
 func initMode() []string {
@@ -46,10 +48,10 @@ func initMode() []string {
 	return buf
 }
 
-func runFetcher(f Fetcher, addr string, repo map[string]interface{}, routine int) error {
-	if err := f.Init(nil); err != nil {
+func runFetcher(f Fetcher, addr string, cfg *config.Config, routine int) error {
+	if err := f.Init(cfg); err != nil {
 		return errors.Wrap(err, "init failed")
 	}
 
-	return f.Run(addr, repo, routine)
+	return f.Run(addr, routine)
 }

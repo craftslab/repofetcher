@@ -14,6 +14,8 @@ package fetcher
 
 import (
 	"testing"
+
+	"repofetcher/config"
 )
 
 func TestInitMode(t *testing.T) {
@@ -23,27 +25,20 @@ func TestInitMode(t *testing.T) {
 }
 
 func TestRunFetcher(t *testing.T) {
-	repo := map[string]interface{}{
-		"repo": []map[string]interface{}{
-			{
-				"branch": "master",
-				"clone": []map[string]interface{}{
-					{
-						"label": "default",
-						"sparse": []string{
-							"cmd",
-						},
-					},
-				},
-				"depth": 1,
-				"name":  "repofetcher",
-				"path":  "repofetcher",
-				"url":   "https://github.com/craftslab/repofetcher.git",
-			},
-		},
+	cfg := config.Config{}
+	cfg.Repo = make([]config.Repo, 1)
+	cfg.Repo[0].Branch = "master"
+	cfg.Repo[0].Clone = make([]config.Clone, 1)
+	cfg.Repo[0].Clone[0].Label = "default"
+	cfg.Repo[0].Clone[0].Sparse = []string{
+		"cmd",
 	}
+	cfg.Repo[0].Depth = 1
+	cfg.Repo[0].Name = "repofetcher"
+	cfg.Repo[0].Path = "repofetcher"
+	cfg.Repo[0].Url = "https://github.com/craftslab"
 
-	if err := runFetcher(&StdIo{}, "", repo, 0); err != nil {
+	if err := runFetcher(&StdIo{}, "", &cfg, 0); err != nil {
 		t.Error("FAIL:", err)
 	}
 }

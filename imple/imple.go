@@ -55,14 +55,6 @@ func (i Imple) Add(data string) error {
 		return errors.New("sparse required")
 	}
 
-	if _, err := os.Stat(i.path); err != nil {
-		if os.IsNotExist(err) {
-			return errors.Wrap(err, "path not exist")
-		} else {
-			return errors.Wrap(err, "stat failed")
-		}
-	}
-
 	dir, err := os.Getwd()
 	if err != nil {
 		return errors.Wrap(err, "getwd failed")

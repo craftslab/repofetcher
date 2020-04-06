@@ -48,9 +48,9 @@ Flags:
 
 ## Setting
 
-*Repo Fetcher* parameters can be set in the directory config or as HTTP request.
+*Repo Fetcher* parameters can be set in JSON file or as HTTP request.
 
-An example of configuration in [repo.json](https://github.com/craftslab/repofetcher/blob/master/config/repo.json):
+An example of configuration in [repo.json](https://github.com/craftslab/repofetcher/blob/master/test/repo.json):
 
 ```json
 {
@@ -68,7 +68,7 @@ An example of configuration in [repo.json](https://github.com/craftslab/repofetc
       "depth": 1,
       "name": "repofetcher",
       "path": "repofetcher",
-      "url": "https://github.com/craftslab/repofetcher.git"
+      "url": "https://github.com/craftslab"
     }
   ]
 }

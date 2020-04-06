@@ -10,26 +10,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fetcher
+package config
 
-import (
-	"repofetcher/config"
-)
-
-type StdIo struct {
-	cfg config.Config
+type Config struct {
+	Repo []Repo `json:"repo"`
 }
 
-func (s *StdIo) Init(cfg *config.Config) error {
-	s.cfg = *cfg
-	return nil
+type Repo struct {
+	Branch string  `json:"branch"`
+	Clone  []Clone `json:"clone"`
+	Depth  int     `json:"depth"`
+	Name   string  `json:"name"`
+	Path   string  `json:"path"`
+	Url    string  `json:"url"`
 }
 
-func (s StdIo) Run(_ string, _ int) error {
-	return s.runStdIo()
-}
-
-func (s StdIo) runStdIo() error {
-	// TODO
-	return nil
+type Clone struct {
+	Label  string   `json:"label"`
+	Sparse []string `json:"sparse"`
 }
