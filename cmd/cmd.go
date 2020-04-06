@@ -28,6 +28,10 @@ import (
 	"repofetcher/fetcher"
 )
 
+const (
+	totalAddr = 2
+)
+
 var (
 	app     = kingpin.New("repofetcher", "Repository Fetcher").Author(Author).Version(Version)
 	addr    = app.Flag("addr", "Server listen address (http)").Default(":9093").String()
@@ -68,7 +72,7 @@ func Run() {
 
 func parseAddr(data string) (string, error) {
 	buf := strings.Split(data, ":")
-	if len(buf) != 2 {
+	if len(buf) != totalAddr {
 		return "", errors.New("separator invalid")
 	}
 

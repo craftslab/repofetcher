@@ -25,18 +25,24 @@ func TestInitMode(t *testing.T) {
 }
 
 func TestRunFetcher(t *testing.T) {
-	cfg := config.Config{}
-	cfg.Repo = make([]config.Repo, 1)
-	cfg.Repo[0].Branch = "master"
-	cfg.Repo[0].Clone = make([]config.Clone, 1)
-	cfg.Repo[0].Clone[0].Label = "default"
-	cfg.Repo[0].Clone[0].Sparse = []string{
-		"cmd",
+	cfg := config.Config{
+		Repo: make([]config.Repo, 1),
 	}
-	cfg.Repo[0].Depth = 1
-	cfg.Repo[0].Name = "repofetcher"
-	cfg.Repo[0].Path = "repofetcher"
-	cfg.Repo[0].Url = "https://github.com/craftslab"
+
+	cfg.Repo[0] = config.Repo{
+		Branch: "master",
+		Clone:  make([]config.Clone, 1),
+		Depth:  1,
+		Name:   "repofetcher",
+		Path:   "repofetcher",
+		Url:    "https://github.com/craftslab",
+	}
+
+	cfg.Repo[0].Clone[0] = config.Clone{
+		Sparse: []string{
+			"cmd",
+		},
+	}
 
 	if err := runFetcher(&StdIo{}, "", &cfg, 0); err != nil {
 		t.Error("FAIL:", err)

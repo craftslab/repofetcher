@@ -59,7 +59,6 @@ An example of configuration in [repo.json](https://github.com/craftslab/repofetc
       "branch": "master",
       "clone": [
         {
-          "label": "default",
           "sparse": [
             "cmd"
           ]

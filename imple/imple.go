@@ -24,6 +24,7 @@ import (
 const (
 	majorVersion = 2
 	minorVersion = 26
+	totalVersion = 3
 )
 
 type Imple struct {
@@ -50,7 +51,7 @@ func (i *Imple) Init(branch, name, path, url string, depth int, sparse bool) err
 	return nil
 }
 
-func (i Imple) Add(data string) error {
+func (i *Imple) Add(data string) error {
 	if !i.sparse {
 		return errors.New("sparse required")
 	}
@@ -83,7 +84,7 @@ func (i Imple) Add(data string) error {
 	return nil
 }
 
-func (i Imple) Check() error {
+func (i *Imple) Check() error {
 	_, err := exec.LookPath("git")
 	if err != nil {
 		return errors.Wrap(err, "command not found")
@@ -98,7 +99,7 @@ func (i Imple) Check() error {
 	buf := strings.Trim(string(out), "git version")
 	version := strings.Split(buf, ".")
 
-	if len(version) < 3 {
+	if len(version) < totalVersion {
 		return errors.New("version invalid")
 	}
 
@@ -119,7 +120,7 @@ func (i Imple) Check() error {
 	return nil
 }
 
-func (i Imple) Clone() error {
+func (i *Imple) Clone() error {
 	var cmd *exec.Cmd
 
 	if i.sparse {

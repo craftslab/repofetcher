@@ -4,7 +4,6 @@
       "branch": "master",
       "clone": [
         {
-          "label": "default",
           "sparse": [
             "cmd"
           ]

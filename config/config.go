@@ -26,6 +26,5 @@ type Repo struct {
 }
 
 type Clone struct {
-	Label  string   `json:"label"`
 	Sparse []string `json:"sparse"`
 }

@@ -20,5 +20,14 @@ import (
 
 func TestRunRuntime(t *testing.T) {
 	defer goleak.VerifyNone(t)
-	// TODO
+
+	op := func(req interface{}) interface{} {
+		return nil
+	}
+
+	var req []interface{}
+
+	if _, err := runRuntime(op, req); err != nil {
+		t.Error("FAIL:", err)
+	}
 }

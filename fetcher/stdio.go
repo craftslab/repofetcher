@@ -13,8 +13,15 @@
 package fetcher
 
 import (
+	"github.com/pkg/errors"
+
 	"repofetcher/config"
+	"repofetcher/runtime"
 )
+
+type Request struct {
+	repo config.Repo
+}
 
 type StdIo struct {
 	cfg config.Config
@@ -30,6 +37,52 @@ func (s StdIo) Run(_ string, _ int) error {
 }
 
 func (s StdIo) runStdIo() error {
-	// TODO
+	req, err := s.request()
+	if err != nil {
+		return errors.Wrap(err, "request invalid")
+	}
+
+	_, err = runtime.Run(s.operation, req)
+
+	return err
+}
+
+func (s StdIo) request() ([]interface{}, error) {
+	helper := func(data config.Repo) ([]Request, error) {
+		var req []Request
+		for _, item := range data.Clone {
+			r := Request{
+				repo: config.Repo{
+					Branch: data.Branch,
+					Clone:  []config.Clone{item},
+					Depth:  data.Depth,
+					Name:   data.Name,
+					Path:   data.Path,
+					Url:    data.Url,
+				},
+			}
+			req = append(req, r)
+		}
+		return req, nil
+	}
+
+	var req []interface{}
+
+	for _, item := range s.cfg.Repo {
+		r, err := helper(item)
+		if err != nil {
+			return nil, err
+		}
+		req = append(req, r)
+	}
+
+	if len(req) == 0 {
+		return nil, errors.New("request null")
+	}
+
+	return req, nil
+}
+
+func (s StdIo) operation(req interface{}) interface{} {
 	return nil
 }
