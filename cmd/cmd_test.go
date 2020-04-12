@@ -64,7 +64,3 @@ func TestParseRepo(t *testing.T) {
 		t.Error("FAIL")
 	}
 }
-
-func TestParseRoutine(t *testing.T) {
-	// PASS
-}

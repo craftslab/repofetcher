@@ -13,14 +13,11 @@
 package fetcher
 
 import (
+	"os"
 	"testing"
 
 	"repofetcher/config"
 )
-
-func TestRunStdIo(t *testing.T) {
-	// TODO
-}
 
 func TestRequest(t *testing.T) {
 	cfg := config.Config{
@@ -54,5 +51,28 @@ func TestRequest(t *testing.T) {
 }
 
 func TestOperation(t *testing.T) {
-	// TODO
+	req := Request{}
+
+	req.repo = config.Repo{
+		Branch: "master",
+		Clone:  make([]config.Clone, 1),
+		Depth:  1,
+		Name:   "repofetcher",
+		Path:   "repofetcher",
+		Url:    "https://github.com/craftslab",
+	}
+
+	req.repo.Clone[0] = config.Clone{
+		Sparse: []string{
+			"cmd",
+		},
+	}
+
+	stdio := &StdIo{}
+
+	if buf := stdio.operation(req); buf != nil {
+		t.Error("FAIL")
+	}
+
+	_ = os.RemoveAll(req.repo.Path)
 }

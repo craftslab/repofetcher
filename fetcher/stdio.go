@@ -16,6 +16,7 @@ import (
 	"github.com/pkg/errors"
 
 	"repofetcher/config"
+	"repofetcher/imple"
 	"repofetcher/runtime"
 )
 
@@ -48,32 +49,25 @@ func (s StdIo) runStdIo() error {
 }
 
 func (s StdIo) request() ([]interface{}, error) {
-	helper := func(data config.Repo) ([]Request, error) {
-		var req []Request
-		for _, item := range data.Clone {
-			r := Request{
-				repo: config.Repo{
-					Branch: data.Branch,
-					Clone:  []config.Clone{item},
-					Depth:  data.Depth,
-					Name:   data.Name,
-					Path:   data.Path,
-					Url:    data.Url,
-				},
-			}
-			req = append(req, r)
+	helper := func(repo config.Repo, clone config.Clone) Request {
+		return Request{
+			repo: config.Repo{
+				Branch: repo.Branch,
+				Clone:  []config.Clone{clone},
+				Depth:  repo.Depth,
+				Name:   repo.Name,
+				Path:   repo.Path,
+				Url:    repo.Url,
+			},
 		}
-		return req, nil
 	}
 
 	var req []interface{}
 
-	for _, item := range s.cfg.Repo {
-		r, err := helper(item)
-		if err != nil {
-			return nil, err
+	for _, repo := range s.cfg.Repo {
+		for _, clone := range repo.Clone {
+			req = append(req, helper(repo, clone))
 		}
-		req = append(req, r)
 	}
 
 	if len(req) == 0 {
@@ -84,5 +78,33 @@ func (s StdIo) request() ([]interface{}, error) {
 }
 
 func (s StdIo) operation(req interface{}) interface{} {
+	i := imple.Imple{}
+
+	if err := i.Check(); err != nil {
+		return nil
+	}
+
+	repo := req.(Request).repo
+	clone := repo.Clone[0]
+	sparse := false
+
+	if len(clone.Sparse) != 0 {
+		sparse = true
+	}
+
+	if err := i.Init(repo.Branch, repo.Name, repo.Path, repo.Url, repo.Depth, sparse); err != nil {
+		return nil
+	}
+
+	if err := i.Clone(); err != nil {
+		return nil
+	}
+
+	if sparse {
+		for _, item := range clone.Sparse {
+			_ = i.Add(item)
+		}
+	}
+
 	return nil
 }

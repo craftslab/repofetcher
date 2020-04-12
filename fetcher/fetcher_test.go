@@ -13,6 +13,7 @@
 package fetcher
 
 import (
+	"os"
 	"testing"
 
 	"repofetcher/config"
@@ -45,6 +46,9 @@ func TestRunFetcher(t *testing.T) {
 	}
 
 	if err := runFetcher(&StdIo{}, "", &cfg, 0); err != nil {
+		_ = os.RemoveAll(cfg.Repo[0].Path)
 		t.Error("FAIL:", err)
 	}
+
+	_ = os.RemoveAll(cfg.Repo[0].Path)
 }
