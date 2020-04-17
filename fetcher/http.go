@@ -13,23 +13,33 @@
 package fetcher
 
 import (
+	"net/http"
+
+	"github.com/gorilla/mux"
+
 	"repofetcher/config"
 )
 
 type Http struct {
-	cfg config.Config
+	router *mux.Router
 }
 
-func (h *Http) Init(cfg *config.Config) error {
-	h.cfg = *cfg
+func (h *Http) Init(_ *config.Config) error {
 	return nil
 }
 
 func (h Http) Run(addr string) error {
-	return h.runHttp(addr)
+	h.router = mux.NewRouter()
+	h.router.HandleFunc("/", h.runHttp).Methods("POST")
+
+	srv := &http.Server{
+		Handler: h.router,
+		Addr:    addr,
+	}
+
+	return srv.ListenAndServe()
 }
 
-func (h Http) runHttp(addr string) error {
-	// TODO
-	return nil
+func (h Http) runHttp(resp http.ResponseWriter, req *http.Request) {
+	resp.WriteHeader(http.StatusOK)
 }

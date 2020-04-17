@@ -13,9 +13,48 @@
 package fetcher
 
 import (
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
 func TestRunHttp(t *testing.T) {
-	// TODO
+	config := `{
+		"repo": [
+			{
+				"branch": "master",
+				"clone": [
+					{
+						"sparse": [
+							"cmd"
+						]
+					}
+				],
+				"depth": 1,
+				"name": "repofetcher",
+				"path": "repofetcher",
+				"url": "https://github.com/craftslab"
+			}
+		]
+	}`
+
+	req := httptest.NewRequest("POST", "http://localhost/", nil)
+
+	resp := httptest.NewRecorder()
+	resp.WriteHeader(http.StatusOK)
+	resp.Header().Set("Content-Type", "application/json")
+	_, _ = io.WriteString(resp, config)
+
+	h := &Http{}
+	h.runHttp(resp, req)
+
+	result := resp.Result()
+	if result != nil && result.StatusCode == http.StatusOK {
+		if result.Body != nil {
+			_ = result.Body.Close()
+		}
+	} else {
+		t.Error("FAIL")
+	}
 }
