@@ -41,26 +41,48 @@ var (
 func Run() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 
-	addr, err := parseAddr(*addr)
-	if err != nil {
-		log.Fatal("addr invalid: ", err.Error())
-	}
-
 	mode, err := parseMode(*mode)
 	if err != nil {
 		log.Fatal("mode invalid: ", err.Error())
 	}
 
-	cfg, err := parseRepo(*repo)
-	if err != nil {
-		log.Fatal("repo invalid: ", err.Error())
+	var _addr string
+	var cfg config.Config
+
+	switch mode {
+	case "http":
+		_addr, err = parseAddr(*addr)
+	case "stdio":
+		cfg, err = parseConfig(*repo)
+	default:
+		err = errors.New("mode invalid")
 	}
 
-	if err := runFetcher(addr, mode, &cfg); err != nil {
+	if err != nil {
+		log.Fatal("addr or config failed: ", err.Error())
+	}
+
+	if err := runFetcher(mode, _addr, &cfg); err != nil {
 		log.Fatal("fetcher failed: ", err.Error())
 	}
 
 	log.Println("fetcher completed.")
+}
+
+func parseMode(data string) (string, error) {
+	matched := false
+	for _, val := range fetcher.Mode {
+		if val == data {
+			matched = true
+			break
+		}
+	}
+
+	if !matched {
+		return "", errors.New("mode mismatched")
+	}
+
+	return data, nil
 }
 
 func parseAddr(data string) (string, error) {
@@ -82,23 +104,7 @@ func parseAddr(data string) (string, error) {
 	return data, nil
 }
 
-func parseMode(data string) (string, error) {
-	matched := false
-	for _, val := range fetcher.Mode {
-		if val == data {
-			matched = true
-			break
-		}
-	}
-
-	if !matched {
-		return "", errors.New("mode mismatched")
-	}
-
-	return data, nil
-}
-
-func parseRepo(name string) (config.Config, error) {
+func parseConfig(name string) (config.Config, error) {
 	cfg := config.Config{}
 
 	file, err := os.Open(name)
@@ -119,6 +125,6 @@ func parseRepo(name string) (config.Config, error) {
 	return cfg, nil
 }
 
-func runFetcher(addr, mode string, cfg *config.Config) error {
-	return fetcher.Run(addr, mode, cfg)
+func runFetcher(mode, addr string, cfg *config.Config) error {
+	return fetcher.Run(mode, addr, cfg)
 }

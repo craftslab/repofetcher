@@ -55,12 +55,12 @@ func TestParseMode(t *testing.T) {
 	}
 }
 
-func TestParseRepo(t *testing.T) {
-	if _, err := parseRepo(""); err == nil {
+func TestParseConfig(t *testing.T) {
+	if _, err := parseConfig(""); err == nil {
 		t.Error("FAIL")
 	}
 
-	if _, err := parseRepo("../test/repo.json"); err != nil {
+	if _, err := parseConfig("../test/repo.json"); err != nil {
 		t.Error("FAIL")
 	}
 }

@@ -34,7 +34,7 @@ var (
 	}
 )
 
-func Run(addr, mode string, cfg *config.Config) error {
+func Run(mode, addr string, cfg *config.Config) error {
 	return runFetcher(fetchers[mode], addr, cfg)
 }
 
