@@ -20,7 +20,7 @@ import (
 
 type Fetcher interface {
 	Init(cfg *config.Config) error
-	Run(addr string, routine int) error
+	Run(addr string) error
 }
 
 var (
@@ -34,8 +34,8 @@ var (
 	}
 )
 
-func Run(addr, mode string, cfg *config.Config, routine int) error {
-	return runFetcher(fetchers[mode], addr, cfg, routine)
+func Run(addr, mode string, cfg *config.Config) error {
+	return runFetcher(fetchers[mode], addr, cfg)
 }
 
 func initMode() []string {
@@ -48,10 +48,10 @@ func initMode() []string {
 	return buf
 }
 
-func runFetcher(f Fetcher, addr string, cfg *config.Config, routine int) error {
+func runFetcher(f Fetcher, addr string, cfg *config.Config) error {
 	if err := f.Init(cfg); err != nil {
 		return errors.Wrap(err, "init failed")
 	}
 
-	return f.Run(addr, routine)
+	return f.Run(addr)
 }

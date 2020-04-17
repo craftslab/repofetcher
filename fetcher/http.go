@@ -25,11 +25,11 @@ func (h *Http) Init(cfg *config.Config) error {
 	return nil
 }
 
-func (h Http) Run(addr string, routine int) error {
-	return h.runHttp(addr, routine)
+func (h Http) Run(addr string) error {
+	return h.runHttp(addr)
 }
 
-func (h Http) runHttp(addr string, routine int) error {
+func (h Http) runHttp(addr string) error {
 	// TODO
 	return nil
 }

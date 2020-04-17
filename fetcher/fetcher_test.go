@@ -45,7 +45,7 @@ func TestRunFetcher(t *testing.T) {
 		},
 	}
 
-	if err := runFetcher(&StdIo{}, "", &cfg, 0); err != nil {
+	if err := runFetcher(&StdIo{}, "", &cfg); err != nil {
 		_ = os.RemoveAll(cfg.Repo[0].Path)
 		t.Error("FAIL:", err)
 	}

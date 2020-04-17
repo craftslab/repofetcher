@@ -41,7 +41,6 @@ Flags:
   --addr=":9093"      Server listen address (http)
   --mode="stdio"      Communication mode (http|stdio)
   --repo="repo.json"  Repo list in json (stdio)
-  --routine=0         Routine to fulfill requests (http)
 ```
 
 
@@ -80,7 +79,7 @@ An example of configuration in [repo.json](https://github.com/craftslab/repofetc
 - Server mode (http)
 
 ```bash
-repofetcher --mode="http" --addr=":9093" --routine=1
+repofetcher --mode="http" --addr=":9093"
 ```
 
 - Standalone mode (stdio)

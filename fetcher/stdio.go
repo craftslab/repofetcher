@@ -33,7 +33,7 @@ func (s *StdIo) Init(cfg *config.Config) error {
 	return nil
 }
 
-func (s StdIo) Run(_ string, _ int) error {
+func (s StdIo) Run(_ string) error {
 	return s.runStdIo()
 }
 

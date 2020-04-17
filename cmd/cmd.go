@@ -17,7 +17,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"runtime"
 	"strconv"
 	"strings"
 
@@ -33,11 +32,10 @@ const (
 )
 
 var (
-	app     = kingpin.New("repofetcher", "Repository Fetcher").Author(Author).Version(Version)
-	addr    = app.Flag("addr", "Server listen address (http)").Default(":9093").String()
-	mode    = app.Flag("mode", "Communication mode (http|stdio)").Default("stdio").String()
-	repo    = app.Flag("repo", "Repo list in json (stdio)").Default("repo.json").String()
-	routine = app.Flag("routine", "Routine to fulfill requests (http)").Default("0").Int()
+	app  = kingpin.New("repofetcher", "Repository Fetcher").Author(Author).Version(Version)
+	addr = app.Flag("addr", "Server listen address (http)").Default(":9093").String()
+	mode = app.Flag("mode", "Communication mode (http|stdio)").Default("stdio").String()
+	repo = app.Flag("repo", "Repo list in json (stdio)").Default("repo.json").String()
 )
 
 func Run() {
@@ -58,12 +56,7 @@ func Run() {
 		log.Fatal("repo invalid: ", err.Error())
 	}
 
-	routine, err := parseRoutine(*routine)
-	if err != nil {
-		log.Fatal("routine invalid: ", err.Error())
-	}
-
-	if err := runFetcher(addr, mode, &cfg, routine); err != nil {
+	if err := runFetcher(addr, mode, &cfg); err != nil {
 		log.Fatal("fetcher failed: ", err.Error())
 	}
 
@@ -126,17 +119,6 @@ func parseRepo(name string) (config.Config, error) {
 	return cfg, nil
 }
 
-func parseRoutine(data int) (int, error) {
-	if data <= 0 {
-		data = runtime.NumCPU() / 2
-		if data <= 0 {
-			data = 1
-		}
-	}
-
-	return data, nil
-}
-
-func runFetcher(addr, mode string, cfg *config.Config, routine int) error {
-	return fetcher.Run(addr, mode, cfg, routine)
+func runFetcher(addr, mode string, cfg *config.Config) error {
+	return fetcher.Run(addr, mode, cfg)
 }
