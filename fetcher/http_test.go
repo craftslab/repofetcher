@@ -13,48 +13,39 @@
 package fetcher
 
 import (
-	"io"
-	"net/http"
+	"bytes"
+	"encoding/json"
 	"net/http/httptest"
 	"testing"
+
+	"repofetcher/config"
 )
 
-func TestRunHttp(t *testing.T) {
-	config := `{
-		"repo": [
-			{
-				"branch": "master",
-				"clone": [
-					{
-						"sparse": [
-							"cmd"
-						]
-					}
-				],
-				"depth": 1,
-				"name": "repofetcher",
-				"path": "repofetcher",
-				"url": "https://github.com/craftslab"
-			}
-		]
-	}`
+func TestRead(t *testing.T) {
+	cfg := config.Config{
+		Repo: make([]config.Repo, 1),
+	}
 
-	req := httptest.NewRequest("POST", "http://localhost/", nil)
+	cfg.Repo[0] = config.Repo{
+		Branch: "master",
+		Clone:  make([]config.Clone, 1),
+		Depth:  1,
+		Name:   "repofetcher",
+		Path:   "repofetcher",
+		Url:    "https://github.com/craftslab",
+	}
 
-	resp := httptest.NewRecorder()
-	resp.WriteHeader(http.StatusOK)
-	resp.Header().Set("Content-Type", "application/json")
-	_, _ = io.WriteString(resp, config)
+	cfg.Repo[0].Clone[0] = config.Clone{
+		Sparse: []string{
+			"cmd",
+		},
+	}
+
+	body, _ := json.Marshal(cfg)
+	req := httptest.NewRequest("POST", "http://localhost:9093", bytes.NewBuffer(body))
 
 	h := &Http{}
-	h.runHttp(resp, req)
-
-	result := resp.Result()
-	if result != nil && result.StatusCode == http.StatusOK {
-		if result.Body != nil {
-			_ = result.Body.Close()
-		}
-	} else {
+	if err := h.read(req); err != nil {
 		t.Error("FAIL")
 	}
 }

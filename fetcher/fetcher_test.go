@@ -25,7 +25,7 @@ func TestInitMode(t *testing.T) {
 	}
 }
 
-func TestRunFetcher(t *testing.T) {
+func TestRoutine(t *testing.T) {
 	cfg := config.Config{
 		Repo: make([]config.Repo, 1),
 	}
@@ -45,7 +45,7 @@ func TestRunFetcher(t *testing.T) {
 		},
 	}
 
-	if err := runFetcher(&StdIo{}, "", &cfg); err != nil {
+	if err := routine(&StdIo{}, "", &cfg); err != nil {
 		_ = os.RemoveAll(cfg.Repo[0].Path)
 		t.Error("FAIL:", err)
 	}

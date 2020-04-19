@@ -35,7 +35,7 @@ var (
 )
 
 func Run(mode, addr string, cfg *config.Config) error {
-	return runFetcher(fetchers[mode], addr, cfg)
+	return routine(fetchers[mode], addr, cfg)
 }
 
 func initMode() []string {
@@ -48,7 +48,7 @@ func initMode() []string {
 	return buf
 }
 
-func runFetcher(f Fetcher, addr string, cfg *config.Config) error {
+func routine(f Fetcher, addr string, cfg *config.Config) error {
 	if err := f.Init(cfg); err != nil {
 		return errors.Wrap(err, "init failed")
 	}

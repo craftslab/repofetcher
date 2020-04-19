@@ -47,7 +47,7 @@ Flags:
 
 ## Setting
 
-*Repo Fetcher* parameters can be set in JSON file or as HTTP request.
+*Repo Fetcher* parameters can be set in JSON file (standalone mode) or as HTTP request (server mode).
 
 An example of configuration in [repo.json](https://github.com/craftslab/repofetcher/blob/master/test/repo.json):
 

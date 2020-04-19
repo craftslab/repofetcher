@@ -20,10 +20,6 @@ import (
 	"repofetcher/runtime"
 )
 
-type Request struct {
-	repo config.Repo
-}
-
 type StdIo struct {
 	cfg config.Config
 }
@@ -34,10 +30,10 @@ func (s *StdIo) Init(cfg *config.Config) error {
 }
 
 func (s StdIo) Run(_ string) error {
-	return s.runStdIo()
+	return s.routine()
 }
 
-func (s StdIo) runStdIo() error {
+func (s StdIo) routine() error {
 	req, err := s.request()
 	if err != nil {
 		return errors.Wrap(err, "request invalid")
@@ -49,16 +45,14 @@ func (s StdIo) runStdIo() error {
 }
 
 func (s StdIo) request() ([]interface{}, error) {
-	helper := func(repo config.Repo, clone config.Clone) Request {
-		return Request{
-			repo: config.Repo{
-				Branch: repo.Branch,
-				Clone:  []config.Clone{clone},
-				Depth:  repo.Depth,
-				Name:   repo.Name,
-				Path:   repo.Path,
-				Url:    repo.Url,
-			},
+	helper := func(repo config.Repo, clone config.Clone) config.Repo {
+		return config.Repo{
+			Branch: repo.Branch,
+			Clone:  []config.Clone{clone},
+			Depth:  repo.Depth,
+			Name:   repo.Name,
+			Path:   repo.Path,
+			Url:    repo.Url,
 		}
 	}
 
@@ -84,7 +78,7 @@ func (s StdIo) operation(req interface{}) interface{} {
 		return nil
 	}
 
-	repo := req.(Request).repo
+	repo := req.(config.Repo)
 	clone := repo.Clone[0]
 	sparse := false
 

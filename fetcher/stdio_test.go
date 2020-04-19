@@ -51,9 +51,7 @@ func TestRequest(t *testing.T) {
 }
 
 func TestOperation(t *testing.T) {
-	req := Request{}
-
-	req.repo = config.Repo{
+	req := config.Repo{
 		Branch: "master",
 		Clone:  make([]config.Clone, 1),
 		Depth:  1,
@@ -62,7 +60,7 @@ func TestOperation(t *testing.T) {
 		Url:    "https://github.com/craftslab",
 	}
 
-	req.repo.Clone[0] = config.Clone{
+	req.Clone[0] = config.Clone{
 		Sparse: []string{
 			"cmd",
 		},
@@ -74,5 +72,5 @@ func TestOperation(t *testing.T) {
 		t.Error("FAIL")
 	}
 
-	_ = os.RemoveAll(req.repo.Path)
+	_ = os.RemoveAll(req.Path)
 }
