@@ -48,31 +48,26 @@ func (h Http) Run(addr string) error {
 
 func (h Http) routine(resp http.ResponseWriter, req *http.Request) {
 	if err := h.read(req); err != nil {
-		resp.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(resp).Encode(map[string]bool{"fetched": false})
 		return
 	}
 
 	buf, err := h.request()
 	if err != nil {
-		resp.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(resp).Encode(map[string]bool{"fetched": false})
 		return
 	}
 
 	_, err = runtime.Run(h.operation, buf)
 	if err != nil {
-		resp.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(resp).Encode(map[string]bool{"fetched": false})
 		return
 	}
 
-	if err := json.NewEncoder(resp).Encode(map[string]bool{"fetched": true}); err != nil {
-		resp.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	resp.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(resp).Encode(map[string]bool{"fetched": true})
 }
 
-func (h Http) read(req *http.Request) error {
+func (h *Http) read(req *http.Request) error {
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return err
